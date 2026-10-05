@@ -1,0 +1,154 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: #050505;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+header {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.logo {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: 5px;
+}
+
+.subtitle {
+    margin-top: 8px;
+    font-size: 12px;
+    letter-spacing: 4px;
+    opacity: 0.6;
+}
+
+.hero {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    max-width: 650px;
+    margin: auto;
+    line-height: 1.6;
+    opacity: 0.65;
+}
+
+.search-box {
+    display: flex;
+    max-width: 750px;
+    margin: 35px auto;
+    gap: 10px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 18px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 12px;
+    color: white;
+    outline: none;
+    font-size: 16px;
+}
+
+.search-box input:focus {
+    border-color: #777;
+}
+
+.search-box button {
+    padding: 18px 30px;
+    border: none;
+    border-radius: 12px;
+    background: white;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.search-box button:hover {
+    opacity: 0.8;
+}
+
+#status {
+    margin-top: 10px;
+    opacity: 0.7;
+}
+
+.results {
+    margin-top: 40px;
+    padding: 25px;
+    background: #0d0d0d;
+    border: 1px solid #222;
+    border-radius: 15px;
+}
+
+.results h2 {
+    margin-bottom: 20px;
+}
+
+.result-card {
+    padding: 18px;
+    margin-bottom: 12px;
+    background: #151515;
+    border-radius: 10px;
+    border: 1px solid #252525;
+}
+
+.result-module {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.result-data {
+    opacity: 0.7;
+    line-height: 1.5;
+}
+
+.hidden {
+    display: none;
+}
+
+footer {
+    margin-top: 100px;
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+    .logo {
+        font-size: 28px;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box button {
+        width: 100%;
+    }
+}
