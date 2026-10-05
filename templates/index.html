@@ -4,60 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{{ app_name }}</title>
+    <title>SILENTLOVER NOX</title>
 
-    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #030303;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 850px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 6px;
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            color: #777;
+            letter-spacing: 4px;
+            font-size: 12px;
+        }
+
+        .description {
+            margin: 40px auto 25px;
+            max-width: 600px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 18px;
+            background: #0d0d0d;
+            color: white;
+            border: 1px solid #292929;
+            border-radius: 10px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: #777;
+        }
+
+        button {
+            padding: 18px 30px;
+            border: 0;
+            border-radius: 10px;
+            background: white;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        #status {
+            margin-top: 20px;
+            color: #777;
+        }
+
+        #results {
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .result {
+            background: #0d0d0d;
+            border: 1px solid #222;
+            padding: 18px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            margin-top: 60px;
+            color: #555;
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .logo {
+                font-size: 28px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <header>
-        <div class="logo">SILENTLOVER</div>
-        <div class="subtitle">OSINT INTELLIGENCE TOOL</div>
-    </header>
+    <div class="logo">
+        SILENTLOVER NOX
+    </div>
 
-    <main>
+    <div class="subtitle">
+        DEEP OSINT INTELLIGENCE PLATFORM
+    </div>
 
-        <section class="hero">
-            <h1>Public Intelligence Search</h1>
+    <p class="description">
+        Public-source intelligence and digital footprint analysis platform.
+        Enter a target to begin reconnaissance.
+    </p>
 
-            <p>
-                Search publicly available information about a username,
-                email, IP address or domain.
-            </p>
+    <div class="search-box">
+        <input
+            id="target"
+            type="text"
+            placeholder="Enter username, email, IP or domain..."
+        >
 
-            <div class="search-box">
+        <button onclick="startScan()">
+            SCAN
+        </button>
+    </div>
 
-                <input
-                    id="target"
-                    type="text"
-                    placeholder="username, email, IP or domain"
-                    autocomplete="off"
-                >
+    <div id="status"></div>
 
-                <button onclick="startScan()">
-                    SCAN
-                </button>
-
-            </div>
-
-            <div id="status"></div>
-
-        </section>
-
-
-        <section id="results" class="results hidden">
-
-            <h2>SCAN RESULTS</h2>
-
-            <div id="result-content"></div>
-
-        </section>
-
-    </main>
-
+    <div id="results" class="hidden"></div>
 
     <footer>
         POWERED BY SILENTLOVER ❤️
@@ -65,7 +165,85 @@
 
 </div>
 
-<script src="/static/app.js"></script>
+<script>
+async function startScan() {
+
+    const target = document
+        .getElementById("target")
+        .value
+        .trim();
+
+    const status = document.getElementById("status");
+    const results = document.getElementById("results");
+
+    if (!target) {
+        status.textContent = "Enter a target first.";
+        return;
+    }
+
+    status.textContent = "Scanning...";
+    results.classList.add("hidden");
+    results.innerHTML = "";
+
+    try {
+
+        const response = await fetch("/api/scan", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                target: target
+            })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            status.textContent = data.error;
+            return;
+        }
+
+        status.textContent =
+            "Target type: " + data.type;
+
+        data.results.forEach(item => {
+
+            const div = document.createElement("div");
+
+            div.className = "result";
+
+            div.innerHTML = `
+                <strong>${escapeHtml(item.module)}</strong>
+                <br><br>
+                ${escapeHtml(item.data)}
+            `;
+
+            results.appendChild(div);
+        });
+
+        results.classList.remove("hidden");
+
+    } catch (error) {
+
+        status.textContent =
+            "Server connection failed.";
+    }
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+</script>
 
 </body>
 </html>
